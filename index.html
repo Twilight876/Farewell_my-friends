@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Prep Graduation(𝓐𝓵𝓲)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #ffd1dc, #ffc3a0, #c0fefe, #d0c4ff);
+            background-size: 400% 400%;
+            animation: gradient 7s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2rem 1rem;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: #fff;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+        }
+
+        .teacher-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            padding: 2rem;
+            border-radius: 30px;
+        }
+
+        .teacher {
+            min-width: 160px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #000;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            word-break: break-word;
+        }
+
+        .teacher:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .popup,
+        .pass-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            z-index: 9999;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+        }
+
+        .close,
+        .submit {
+            margin-top: 20px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        input[type="password"] {
+            padding: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 10px;
+            margin-top: 10px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .teacher-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>My Prep Graduation(𝓐𝓵𝓲)</h1>
+
+    <div class="teacher-container" id="teacherContainer"></div>
+
+    <div class="popup" id="popup">
+        <h2 id="popup-title"></h2>
+        <p id="popup-message"></p>
+        <button class="close" onclick="closePopup()">Close</button>
+    </div>
+
+    <div class="pass-dialog" id="pass-dialog">
+        <h2 id="pass-teacher-name"></h2>
+        <input type="password" id="password-input" placeholder="Enter password..." />
+        <div class="error" id="error-message"></div>
+        <button class="submit" onclick="submitPassword()">Submit</button>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="hotline.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const teacherPasswords = {
+            teacher0: {
+                pass: "4509",
+                name: "Ann",
+                message: "Ms. Ann, the gentle one.\nIt was a hard year, but I hope you get everything you want and dream of, and reach your highest goals, insha'Allah.\nMay Allah keep us together always, my sisters.\n(Engineer-doctor)"
+            },
+            teacher1: {
+                pass: "0525",
+                name: "Dareen",
+                message: "Dareen, ya Dareen, ely mwdyany wra elshams.\nIt was a hard year. I hope you reach your highest goals, stay happy always, and get everything you want, insha'Allah.\nI do not know exactly what you want, but I know you deserve the best.\nMay Allah keep us together always, my sisters."
+            },
+            teacher2: {
+                pass: "2989",
+                name: "Yassin",
+                message: " soooosi.\nOne of the founders of the group... Sosi or Shahi...\nMy beloved, may Allah always keep you for me, and keep us side by side.\nMy dearest and closest to the heart.\n(Barber)"
+            },
+            teacher3: {
+                pass: "6012",
+                name: "Yara",
+                message: "Ms. Yara, believe me, you need to walk with GPS, not normal legs......\nBy the way, thank you for being part of the group since Prep 1.\nI hope you achieve the best, reach your highest goals, and always stay happy and the happiest of the happy.\nMay Allah bless you, my sister.\n(Doctor-engineer)"
+            },
+            teacher4: {
+                pass: "2332",
+                name: "Rodin",
+                message: "Ms. Rodin......I hope you reach your goals, insha'Allah, and always be the happiest of the happy. I hope I was not a heavy guest, and that one day you become the most popular doctor, insha'Allah. This description suits you best. ya rabb nfdl dayman e5wat\n(Doctor)"
+            }
+        };
+
+        let currentTeacherId = null;
+        const container = document.getElementById("teacherContainer");
+
+        for (const key in teacherPasswords) {
+            const div = document.createElement("div");
+            div.className = "teacher";
+            div.innerText = teacherPasswords[key].name;
+            div.onclick = () => showPassDialog(key);
+            container.appendChild(div);
+        }
+
+        function showPassDialog(teacherId) {
+            currentTeacherId = teacherId;
+            document.getElementById("pass-teacher-name").innerText = teacherPasswords[teacherId].name;
+            document.getElementById("password-input").value = "";
+            document.getElementById("error-message").innerText = "";
+            document.getElementById("pass-dialog").style.display = "block";
+        }
+
+        function submitPassword() {
+            const input = document.getElementById("password-input").value;
+
+            if (input === teacherPasswords[currentTeacherId].pass) {
+                document.getElementById("popup-title").innerText = teacherPasswords[currentTeacherId].name;
+                document.getElementById("popup-message").innerText = teacherPasswords[currentTeacherId].message;
+                document.getElementById("popup").style.display = "block";
+                document.getElementById("pass-dialog").style.display = "none";
+            } else {
+                document.getElementById("error-message").innerText = "wrong password";
+            }
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        document.addEventListener("click", function (e) {
+            const isTeacher = e.target.classList.contains("teacher");
+            const isDialog = e.target.closest(".pass-dialog");
+            const isPopup = e.target.closest(".popup");
+
+            if (!isTeacher && !isDialog && !isPopup) {
+                document.getElementById("pass-dialog").style.display = "none";
+            }
+        });
+
+        window.addEventListener("click", function initMusic() {
+            const audio = document.getElementById("bg-music");
+            audio.volume = 0.7;
+            audio.play().catch(() => {
+                console.log("Autoplay prevented.");
+            });
+            window.removeEventListener("click", initMusic);
+        });
+    </script>
+</body>
+</html> </script>
+</body>
+</html>>
+</html>ody>
+</html>>
+</html>Listener("click", initMusic);
+        });
+    </script>
+</body>
+</html> </script>
+</body>
+</html>>
+</html>
